@@ -1,12 +1,16 @@
 import re
 from ChampsimLog import ChampsimLog
-class BaseMetric:
+
+class Metric:
+    def get_val(self,log:ChampsimLog):
+        raise NotImplementedError("Subclasses must implement get_val method")
+class BaseMetric(Metric):
     '''A base metric defined by a regex pattern to extract a value from a Champsim log.'''
     def __init__(self,name:str,regex_pattern:str) -> None:
         self.pattern = re.compile(regex_pattern)
         self.name = name
     def get_val(self,log:ChampsimLog):
-        match = self.pattern.match(log.get_log_text())
+        match = self.pattern.search(log.get_log_text())
         if not match:
             raise ValueError(f"Metric pattern {self.name} did not match log {log.path}")
         elif len(match.groups()) > 1:
@@ -15,7 +19,7 @@ class BaseMetric:
             return match.groups()[0]
         return None
 
-class CustomMetric():
+class CustomMetric(Metric):
     '''A metric defined by multiple base metrics and a processing function.
     The processing function takes as input the raw values extracted by each base metric
     and returns the final value of the custom metric. The order of metrics in the list and processing
