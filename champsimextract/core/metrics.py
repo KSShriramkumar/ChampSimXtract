@@ -1,4 +1,4 @@
-from __future__ import annotations
+# from __future__ import annotations
 import re
 from champsimextract.core.ChampsimLog import ChampsimLog
 class Metric:
@@ -53,8 +53,8 @@ class BaselinedMetric(Metric):
     def get_val(self,log:ChampsimLog):
         current_value = float(self.base_metric.get_val(log))
         baseline_value = float(self.baseline_config_data\
-                               [self.baseline_config.get_workload_name_from_path(log.path)]\
-                               [self.baseline_config.get_simpoint_from_path(log.path)])
+                               [self.baseline_config.get_workload_name_from_log_filename(log.path)]\
+                               [self.baseline_config.get_simpoint_from_log_filename(log.path)])
         if baseline_value == 0:
             raise ValueError(f"Baseline value for config {self.baseline_config.name} is zero, cannot compute baselined metric.")
         return self.normalisation_func(current_value,baseline_value)
