@@ -20,15 +20,23 @@ class BaseMetric(Metric):
         elif len(match.groups()) > 1:
             raise ValueError(f"Metric pattern {self.name} has more than one capturing group in log {log.path}")
         elif len(match.groups()) == 1:
-            return match.groups()[0]
-        return None
+            try:
+                val = int(match.groups()[0])
+            except ValueError:
+                try:
+                    val = float(match.groups()[0])
+                except ValueError:
+                    raise ValueError(f"Metric pattern {self.name} captured value '{match.groups()[0]}' that is neither int nor float in log {log.path}")
+            return val
+        raise ValueError(f"Metric pattern {self.name} did not capture any groups in log {log.path}")
 
 class CustomMetric(Metric):
     '''A metric defined by multiple base metrics and a processing function.
     The processing function takes as input the raw values extracted by each base metric
     and returns the final value of the custom metric. The order of metrics in the list and processing
     function arguments must match.'''
-    def __init__(self,metrics:list[BaseMetric],process_func) -> None:
+    def __init__(self,name:str,metrics:list[BaseMetric],process_func) -> None:
+        self.name=name
         self.metrics = metrics
         self.process_func = process_func
     def get_val(self,log:ChampsimLog):

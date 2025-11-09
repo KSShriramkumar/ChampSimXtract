@@ -1,5 +1,9 @@
+"""
+Example script to demonstrate how to compute and plot speedup of different LLC sizes
+relative to a baseline configuration using IPC as the base metric.
+Uses the GEOMEAN aggregator to compute the geometric mean speedup across workloads.
+Plots the speedup as a bar chart and prints a LaTeX table of the results."""
 from champsimextract.core import *
-from champsimextract.misc.MetricAggr import MetricAggregator
 from champsimextract.common.metrics import IPC
 from champsimextract.common.aggregators import GEOMEAN
 
@@ -20,7 +24,6 @@ def flat_split_multi_sep(inp_str:str,sep:list[str]):
     return result
 
 if __name__ == "__main__":
-   
     speedup = BaselinedMetric(
         name="Speedup",
         base_metric=IPC,

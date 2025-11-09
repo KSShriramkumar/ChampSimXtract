@@ -72,10 +72,8 @@ class Plotter:
         """ Sort workloads alphabetically, placing avg_key at the end if present. """
         avg_present = any(w.lower() == self.avg_key.lower() for w in self.workloads)
         sorted_wls = sorted([w for w in self.workloads if w.lower() != self.avg_key.lower()], key=str.lower)
-        print(self.avg_key,sorted_wls)
         if avg_present:
             sorted_wls.append(self.avg_key)
-        print(sorted_wls)
         
         return sorted_wls
 
@@ -116,7 +114,6 @@ class Plotter:
         """
         if kind == "stacked":
             # Sum across the stacking dimension (axis=1)
-            print(np.sum(self.values, axis=0))
             maximum = np.max(np.sum(self.values, axis=0))
             minimum = np.min(self.values) # stacked bars usually start at 0
         else:
@@ -227,6 +224,7 @@ class Plotter:
             plt.savefig(savepath)
             plt.close()
             return
+        plt.show()
     
     ### ---------- Master plot ---------- ###
     def plot(self,savepath: str = ""):

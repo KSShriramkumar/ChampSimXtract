@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "champsimextract"
-version = "0.1.0"
+version = "0.2.0"
 description = "A Python toolkit for extracting and visualizing ChampSim simulation results."
 readme = "README.md"
 requires-python = ">=3.8"
@@ -21,7 +21,9 @@ dependencies = [
     "matplotlib",
     "numpy",
 ]
-
+[tool.setuptools.packages.find]
+include = ["champsimextract*"]
+exclude = ["data*"]
 [project.urls]
 "Homepage" = "https://github.com/KSShriramkumar/ChampSimXtract"
 "Bug Tracker" = "https://github.com/KSShriramkumar/ChampSimXtract/issues"

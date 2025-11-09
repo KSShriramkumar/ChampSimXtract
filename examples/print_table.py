@@ -1,5 +1,10 @@
+"""
+Example script to print a table of IPC for different LLC sizes.
+Uses the AVERAGE aggregator to compute the average IPC across workloads.
+Prints the table in LaTeX format.
+"""
 from champsimextract.core import *
-from champsimextract.misc.MetricAggr import MetricAggregator
+from champsimextract.common.aggregators import AVERAGE
 
 ipc = BaseMetric(
     name="IPC",
@@ -17,7 +22,6 @@ exp = Experiment(
     get_simpoint_from_log_filename=lambda path: path.name.split('_')[0]
 )
 
-agg = MetricAggregator(name="average")
 
 # Print table
-print(exp.print_table(ipc, agg, latex=True))
+print(exp.print_table(ipc, AVERAGE, latex=True))
