@@ -1,13 +1,9 @@
 from champsimextract.core import *
 from champsimextract.misc.MetricAggr import MetricAggregator
+from champsimextract.common.metrics import IPC
+from champsimextract.common.aggregators import GEOMEAN
 
-def geometric_mean(values):
-    """Calculates the geometric mean of a list of values."""
-    product = 1.0
-    n = len(values)
-    for v in values:
-        product *= v
-    return product ** (1.0 / n)
+
 def flat_split_list(parts:list,sep):
     """Splits a list of strings by a separator and flattens the result into a single list."""
     result = []
@@ -22,14 +18,12 @@ def flat_split_multi_sep(inp_str:str,sep:list[str]):
     for s in sep[1:]:
         result = flat_split_list(result,s)
     return result
+
 if __name__ == "__main__":
-    ipc = BaseMetric(
-        name="IPC",
-        regex_pattern=r"CPU \d+ cumulative IPC:\s+([0-9]*\.[0-9]+).*"
-    )
+   
     speedup = BaselinedMetric(
         name="Speedup",
-        base_metric=ipc,
+        base_metric=IPC,
         baseline_config=Configuration(
             name="4096",
             logdir="../data/LLC-Size/4096",
@@ -49,7 +43,8 @@ if __name__ == "__main__":
     )
     for config in exp.configurations:
         print(f"Configuration: {config.name}, Number of Logs: {len(config.logCollection.logs)}")
-    agg = MetricAggregator(name="geomean",reducer=geometric_mean)
-    print(exp.plot(speedup, agg, plot_type="line", ylabel="Speedup",base_color="orange" ,round_to=1,delta_round=0.01, delta_factor=1))
-    print(exp.print_table(speedup, agg,latex=True))
+    
+    
+    exp.plot(speedup, GEOMEAN,savepath="temp.pdf",plot_type="bar", ylabel="Speedup",tune_yticks=True,base_color="orange" ,round_to=1,delta_round=0.01, delta_factor=2)
+    exp.print_table(speedup, GEOMEAN,latex=True)
     
